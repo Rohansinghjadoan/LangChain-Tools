@@ -1,16 +1,17 @@
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain.tools import tool
 from dotenv import load_dotenv
+from langchain_core.messages import HumanMessage
 
 load_dotenv()
 
-# MUST USE chat-completion task
+
 hf_llm = HuggingFaceEndpoint(
     repo_id="google/gemma-2-2b-it",
-    task="text-genration",     # <-- FIXED
+    task="text-genration",     
 )
 
-# Your version requires llm=
+
 llm = ChatHuggingFace(llm=hf_llm)
 
 @tool
@@ -21,4 +22,6 @@ def multiply(a: int, b: int) -> int:
 llm_with_tools = llm.bind_tools([multiply])
 
 response = llm_with_tools.invoke("can you multiply 6 and 7 for me?")
-print(response)
+
+multiply.invoke({'name':'multiply','args':{'a':6,'b':7}})
+
